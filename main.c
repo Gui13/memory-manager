@@ -19,81 +19,32 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "bstree.h"
-
-struct integer
-{
-	int n;
-	char *english;
-};
-
-int my_cmp(const void *p1, const void *p2)
-{
-	return ((struct integer *)p1)->n-((struct integer *)p2)->n;
-}
-
-void my_twalk_action(void *data)
-{
-	printf("%d %s\n",((struct integer *)data)->n,
-	       ((struct integer *)data)->english);
-}
-
-static int nbofdealloc = 0;
-
-void free_integer(void * integer)
-{
-	nbofdealloc++;
-	printf("Freeing %08x\n",integer);
-	free(integer);
-}
+#include "memory_manager.h"
 
 
 int main(void)
 {
-	struct bstree_node *bstree_root=NULL;
-	/*struct integer i1={1,"one"};
-	struct integer i2={2,"two"};
-	struct integer i3={3,"three"};	
-	struct integer i4={4,"four"};
-	struct integer i5={5,"five"};
-	struct integer lost={2,NULL};
-	struct integer *needle;*/
-	int k;
-	
-	printf("Sleep 2 s");
-	sleep(2);
-	printf("   OK\n");
-	
-	printf("%d deallocated for the moment\n",nbofdealloc);
-	
-	for(k=0; k< 150; k++)
+
+	char *tmp = NULL;
+	int k=0;
+	char *string = "Blablastring";
+	int length = strlen(string);
+
+	for(k=0; k<15;k++)
 	{
-		int r = rand();
-		struct integer *tmp = calloc(1,sizeof(struct integer)); 
-		tmp->n = r;
-		tmp->english = NULL;
-		printf("Adding %d to tree\n",r);
-		bstree_add(&bstree_root,tmp,my_cmp);
+		tmp = MM_CALLOC(length+1,sizeof(char));
+		strcpy(tmp,string);
+		tmp[length] = '\0';
 	}
-	
-	/*
-	bstree_add(&bstree_root,&i3,my_cmp);
-	bstree_add(&bstree_root,&i1,my_cmp);
-	bstree_add(&bstree_root,&i5,my_cmp);
-	bstree_add(&bstree_root,&i4,my_cmp);
-	bstree_add(&bstree_root,&i2,my_cmp);*/
-	
-	bstree_walk(bstree_root,my_twalk_action);
-	
-	
-	printf("Deletion test\n");
-	
-	bstree_free(bstree_root,free_integer);
-	printf("Dealloced %d items\n",nbofdealloc);
-	
+
+	mm_stats();
+	MM_FREE(tmp);
+	mm_stats();
+
 	return 0;
 }

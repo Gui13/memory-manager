@@ -102,8 +102,7 @@ int bstree_add(struct bstree_node **root,
 	return bstree_insert(*root,node,cmp);
 }
 
-void bstree_walk(struct bstree_node *node,
-				 void (*action)(void *))
+void bstree_walk(struct bstree_node *node, void (*action)(void *))
 {
 	if (node == NULL)
 		return;
