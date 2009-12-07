@@ -40,10 +40,10 @@ int main(void)
 		tmp = MM_CALLOC(length+1,sizeof(char));
 		strcpy(tmp,string);
 		tmp[length] = '\0';
+		if(k%3 == 0)
+			MM_FREE(tmp);
 	}
 
-	mm_stats();
-	MM_FREE(tmp);
 	mm_stats();
 
 	return 0;

@@ -1,15 +1,33 @@
+CC=gcc
+CFLAGS=-W -Wall -ansi -pedantic -g
+LDFLAGS=
+EXEC=mm
+OBJDIR=obj
+SRCDIR=src
 
+ifdef DEBUG
+CFLAGS+= -g
+endif
 
-OPTS=-DDEBUG
-APPNAME=mm
+INCLUDES=-I./include
+SOURCES=$(wildcard $(SRCDIR)/*.c)
+OBJ=$(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SOURCES))
 
-.phony: all
+all: before $(EXEC)
 
-all: main
+before:
+	@echo Objects: $(OBJ)
+	
+clean:
+	del /s obj\*.o
+	del /s $(EXEC).exe
 
-main: main.c 
-	gcc -o $(APPNAME) main.c obj/memory_manager.o obj/bstree.o
+# no tuning after that
 
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) -o $(EXEC) main.c $(OBJ) $(INCLUDES)
 
-%o: %c %h
-	gcc $(OPTS) -c -o obj/$@ $<
+.PHONY: before $(EXEC) 
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDES)
