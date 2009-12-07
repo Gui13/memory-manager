@@ -8,6 +8,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "memory_manager.h"
 #include "bstree.h"
@@ -15,10 +16,10 @@
 
 struct _memory_allocation{
 	char *file;
-	int  line;
+	unsigned int  line;
 	
 	void *pt;
-	int size;
+	unsigned int size;
 };
 
 static struct bstree_node *mm_root = NULL;
@@ -61,7 +62,7 @@ static void mm_print_func( void *data)
 	if(alloc)
 	{
 		printf("@0x%08x:\t%s:%d\t:\t%d bytes\n",
-			   alloc->pt,
+			   (unsigned int)alloc->pt,
 			   alloc->file,
 			   alloc->line,
 			   alloc->size);
@@ -80,10 +81,17 @@ void *mm_malloc(size_t sz, char *file, int line)
 		memory_allocation *allocation = malloc(sizeof(memory_allocation));
 		if(allocation)
 		{
+			/* allocate filename (it's on the stack right now) */
+			char *filename = NULL;
+			int size = strlen(file);
+			filename = calloc(size+1, sizeof(char));
+			memcpy(filename, file, size + 1);
+			/* fill the allocation data */
 			allocation->pt = data;
-			allocation->file = file;
+			allocation->file = filename;
 			allocation->line = line;
 			allocation->size = sz;
+			/* insert in the tree */
 			bstree_add(&mm_root, (void *)allocation, mm_compare);
 			printf("[MM] Alloc'ed %d bytes at %s:%d\n",allocation->size,allocation->file,allocation->line);
 		}
@@ -104,8 +112,14 @@ void *mm_calloc(size_t times, size_t sz, char *file, int line)
 		memory_allocation *allocation = malloc(sizeof(memory_allocation));
 		if(allocation)
 		{
+			/* allocate filename (it's on the stack right now) */
+			char *filename = NULL;
+			int size = strlen(file);
+			filename = calloc(size+1, sizeof(char));
+			memcpy(filename, file, size + 1);
+			/* fill the allocation data */
 			allocation->pt = data;
-			allocation->file = file;
+			allocation->file = filename;
 			allocation->line = line;
 			allocation->size = sz*times;
 			bstree_add(&mm_root, (void *)allocation, mm_compare);

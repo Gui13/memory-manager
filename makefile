@@ -19,8 +19,8 @@ before:
 	@echo Objects: $(OBJ)
 	
 clean:
-	del /s obj\*.o
-	del /s $(EXEC).exe
+	rm -f obj/*.o
+	rm -f $(EXEC).exe
 
 # no tuning after that
 
