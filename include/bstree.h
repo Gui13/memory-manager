@@ -3,6 +3,7 @@
  *
  *  Written by Diogo Sousa aka orium
  *  Copyright (C) 2008 Diogo Sousa
+ *  Enhanced by Guillaume BIENKOWSKI
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

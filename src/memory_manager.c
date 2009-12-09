@@ -1,9 +1,7 @@
 /*
- *  memory_maanger.c
  *  MemoryManager
  *
  *  Created by Guillaume BIENKOWSKI on 11/02/09.
- *  Copyright 2009 __MyCompanyName__. All rights reserved.
  *
  */
 #include <stdlib.h>
@@ -78,13 +76,13 @@ void *mm_malloc(size_t sz, char *file, int line)
 	void *data = malloc(sz);
 	if(data)
 	{
-		memory_allocation *allocation = malloc(sizeof(memory_allocation));
+		memory_allocation *allocation = (memory_allocation *)malloc(sizeof(memory_allocation));
 		if(allocation)
 		{
 			/* allocate filename (it's on the stack right now) */
 			char *filename = NULL;
 			int size = strlen(file);
-			filename = calloc(size+1, sizeof(char));
+			filename = (char *)calloc(size+1, sizeof(char));
 			memcpy(filename, file, size + 1);
 			/* fill the allocation data */
 			allocation->pt = data;
@@ -109,13 +107,13 @@ void *mm_calloc(size_t times, size_t sz, char *file, int line)
 	void *data = calloc(times,sz);
 	if(data)
 	{
-		memory_allocation *allocation = malloc(sizeof(memory_allocation));
+		memory_allocation *allocation = (memory_allocation *)malloc(sizeof(memory_allocation));
 		if(allocation)
 		{
 			/* allocate filename (it's on the stack right now) */
 			char *filename = NULL;
 			int size = strlen(file);
-			filename = calloc(size+1, sizeof(char));
+			filename = (char *)calloc(size+1, sizeof(char));
 			memcpy(filename, file, size + 1);
 			/* fill the allocation data */
 			allocation->pt = data;
